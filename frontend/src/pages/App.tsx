@@ -3,10 +3,16 @@ import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+type User = {
+  id: number;
+  first_name: string;
+  last_name: string;
+};
+
 function App() {
   const [count, setCount] = useState(0)
 
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState<User[]>([]);
 
   function fetchUsers(){
         return fetch("http://localhost:8000/users")
@@ -21,7 +27,6 @@ function App() {
           });
       }, []);
 
-
   return (
     <>
       <div>
@@ -33,6 +38,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <h1>{users.length > 0 && users[0].first_name} {users.length > 0 && users[0].last_name}</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

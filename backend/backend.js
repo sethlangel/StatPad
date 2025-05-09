@@ -15,18 +15,24 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-  
-app.get("/users", (req, res) => {
-const name = req.query.name;
-const job = req.query.job;
-
-userService.getUsers(name, job).then((r) => res.send(r))
-.catch((err) => console.log(err))});  
 
 app.get('/users', async (req, res) => {
-    const { data, error } = await supabase.from('users').select('*');
-  if (error) return res.status(500).json({ error: error.message });
-  res.json(data);
-})
+  try {
+    const { data, error } = await supabase.from("users").select();
 
-export default router;
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error: error.message });
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(
+    `Example app listening at http://localhost:${port}`
+  );
+});

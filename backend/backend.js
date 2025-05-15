@@ -1,12 +1,9 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 
 // routes
 import home from "./routes/home.js";
 import users from "./routes/users.js";
-
-dotenv.config();
 
 const app = express();
 const port = 8000;

@@ -1,35 +1,21 @@
-import {createClient} from "@supabase/supabase-js"
-import express from "express"
-import cors from "cors"
-import dotenv from "dotenv"
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
-dotenv.config()
+// routes
+import home from "./routes/home.js";
+import users from "./routes/users.js";
 
-const supabase = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY)
+dotenv.config();
 
 const app = express();
 const port = 8000;
-app.use(cors())
+
+app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to StatPad!");
-});
-
-app.get('/users', async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("users").select();
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return res.status(500).json({ error: error.message });
-    }
-    res.status(200).json(data);
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    res.status(500).json({ error: 'Unexpected server error' });
-  }
-});
+app.get("/", home);
+app.get("/users", users);
 
 app.listen(port, () => {
   console.log(

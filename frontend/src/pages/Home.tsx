@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+import './Home.css'
 
 type User = {
   id: number;
@@ -14,18 +14,18 @@ function App() {
 
   const [users, setUsers] = useState<User[]>([]);
 
-  function fetchUsers(){
-        return fetch("http://localhost:8000/users")
-   }
+  function fetchUsers() {
+    return fetch("http://localhost:8000/users")
+  }
 
   useEffect(() => {
-        fetchUsers()
-          .then((res) => res.json())
-          .then((json) => setUsers(json))
-          .catch((error) => {
-            console.log(error);
-          });
-      }, []);
+    fetchUsers()
+      .then((res) => res.json())
+      .then((json) => setUsers(json))
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <>

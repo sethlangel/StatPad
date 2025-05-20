@@ -32,7 +32,7 @@ export default function Login() {
 
         if (response.status === 200) {
             if (auth) {
-                auth.login(json.session.access_token);
+                auth.login(json.session);
                 router.push('/')
             }
             else {

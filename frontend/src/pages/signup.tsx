@@ -23,7 +23,7 @@ export default function SignUp() {
         const json = await response.json();
 
         if (response.status === 201) {
-            setResponseMessage("Success!");
+            setResponseMessage("Success! Go to /login to sign in.");
         } else if (response.status === 400) {
             setResponseMessage(json.error);
         } else {

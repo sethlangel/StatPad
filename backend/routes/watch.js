@@ -60,27 +60,14 @@ router.post("/new-game", authenticateUser, async (req, res) => {
 // ====================
 // POST /watch/log-error
 // ====================
-const getErrorIdByName = async (errorName) => {
-  const { data, error } = await supabase
-    .from("error_list")
-    .select("id")
-    .eq("name", errorName)
-    .single();
-
-  if (error || !data) {
-    console.error("Error looking up error_id: ", error);
-    return null;
-  }
-
-  return data.id;
-};
-
 router.post(
   "/log-error",
   authenticateUser,
   async (req, res) => {
     const userId = req.user.id;
     const { gameId, errorType } = req.body;
+
+    console.log(userId, gameId, errorType);
 
     // Validate input
     if (!gameId) {
@@ -98,12 +85,15 @@ router.post(
     }
 
     // Validate if game exists
-    const { gameData, gameError } = await supabase
+    const gameResponse = await supabase
       .from("games")
       .select("id")
       .eq("id", gameId)
       .eq("user_id", userId)
       .single();
+
+    const gameData = gameResponse.data;
+    const gameError = gameResponse.error;
 
     if (gameError || !gameData) {
       return res
@@ -112,44 +102,37 @@ router.post(
     }
 
     // Validate error type
-    const { errorData, errorTypeError } = await supabase
+    const errorsResponse = await supabase
       .from("error_list")
       .select("id")
       .eq("name", errorType)
       .single();
 
-    if (errorTypeError || !errorListData) {
+    const errorTypeError = errorsResponse.error;
+    const errorId = errorsResponse.data.id;
+
+    if (errorTypeError || !errorId) {
       return res
         .status(400)
         .json({ error: "Invalid error type" });
     }
 
-    const errorId = await getErrorIdByName(errorType);
-    if (!errorId) {
-      return res
-        .status(400)
-        .json({ error: "Invalid error type" });
-    }
-
-    const { data, error } = await supabase
+    // TODO: is it bad to use supabaseAdmin?
+    const insertResponse = await supabaseAdmin
       .from("errors")
       .insert({
         game_id: gameId,
-        error_id: errorType,
+        error_id: errorId,
         user_id: userId
       });
 
-    console.log("data = ", data);
-    console.log("error = ", error);
-
-    if (error) {
-      return res.status(500).json({ error: error.message });
+    if (insertResponse.error) {
+      return res
+        .status(500)
+        .json({ error: insertResponse.error.message });
     }
 
-    res.status(201).json({
-      message: "Error logged",
-      data
-    });
+    res.status(201).json({ message: "Error logged" });
   }
 );
 

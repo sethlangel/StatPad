@@ -3,6 +3,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
+// Note: currently case sensitive. TODO: fix this
+const ERRORS = [
+    "DINK", "DRIVE", "VOLLEY", "DROP", "SERVE", "SPEED UP"
+]
+
 // Fetch today's error count
 const fetchTodaysErrorCount = async (userId: string) => {
     const res = await fetch(`/watch/stats-today?userId=${userId}`);
@@ -18,6 +23,7 @@ const Watch = () => {
     if (!auth) {
         return;
     }
+
     //const [user, setUser] = useState<User | null>(null);
 
     const [gameId, setGameId] = useState<number | null>(null);
@@ -111,7 +117,7 @@ const Watch = () => {
                         <div>
                             <h2>Select Error Type</h2>
                             <div>
-                                {["Dink", "Smash", "Volley"].map(
+                                {ERRORS.map(
                                     (errorType) => (
                                         <button
                                             key={errorType}

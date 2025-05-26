@@ -14,6 +14,10 @@ const fetchTodaysErrorCount = async (userId: string) => {
 
 const Watch = () => {
     const auth = useAuth();
+
+    if (!auth) {
+        return;
+    }
     //const [user, setUser] = useState<User | null>(null);
 
     const [gameId, setGameId] = useState<number | null>(null);
@@ -31,8 +35,7 @@ const Watch = () => {
     // 1. check for auth on mount
     // 2. fetch today's error count
     useEffect(() => {
-
-        if (!auth || !auth.isLoggedIn()) {
+        if (!auth.isLoggedIn()) {
             // TODO: handle not being signed in
         } else {
             // if (data && data.user) {
@@ -47,18 +50,14 @@ const Watch = () => {
 
     // Called when user clicks "Start Game"
     const handleStartGame = async () => {
-        if (!auth || !auth.session) {
-            console.log("No auth or auth session.");
-            return;
-        }
+        if (!auth.isLoggedIn()) return;
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/new-game`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${auth.session.access_token}`,
-            },
-            //body: JSON.stringify({ userId: user.id })
+                "Authorization": `Bearer ${auth.session?.access_token}`,
+            }
         });
 
         const data = await res.json();
@@ -71,25 +70,27 @@ const Watch = () => {
     const handleLogError = () => setShowErrorSelector(true);
 
     // Called when user selects error type
-    // const handleSelectErrorType = async (errorType: string) => {
-    //     setShowErrorSelector(false);
+    const handleSelectErrorType = async (errorType: string) => {
+        setShowErrorSelector(false);
 
-    //     if (!user || !gameId) return;
+        if (!auth.isLoggedIn() || !gameId) return;
 
-    //     await fetch("/watch/log-error", {
-    //         method: "POST",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({
-    //             errorType,
-    //             gameId,
-    //             userId: user.id
-    //         })
-    //     });
+        await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/log-error`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${auth.session?.access_token}`
+            },
+            body: JSON.stringify({
+                errorType,
+                gameId,
+            })
+        });
+        // todo: only increase on success
+        setErrorCount((prev) => prev + 1);
+    };
 
-    //     setErrorCount((prev) => prev + 1);
-    // };
-
-    if (!auth || !auth.isLoggedIn())
+    if (!auth.isLoggedIn())
         return <div>Not logged in!</div>;
 
     return (
@@ -109,7 +110,7 @@ const Watch = () => {
                     {showErrorSelector && (
                         <div>
                             <h2>Select Error Type</h2>
-                            {/* <div>
+                            <div>
                                 {["Dink", "Smash", "Volley"].map(
                                     (errorType) => (
                                         <button
@@ -121,7 +122,7 @@ const Watch = () => {
                                         </button>
                                     )
                                 )}
-                            </div> */}
+                            </div>
                         </div>
                     )}
                 </>

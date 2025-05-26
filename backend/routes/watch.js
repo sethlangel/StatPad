@@ -75,74 +75,82 @@ const getErrorIdByName = async (errorName) => {
   return data.id;
 };
 
-router.post("/log-error", async (req, res) => {
-  console.log("req = ", req);
-  const { gameId, errorType, userId } = req.body;
+router.post(
+  "/log-error",
+  authenticateUser,
+  async (req, res) => {
+    const userId = req.user.id;
+    const { gameId, errorType } = req.body;
 
-  // Validate input
-  if (!gameId) {
-    return res.status(400).json({ error: "Missing gameId" });
+    // Validate input
+    if (!gameId) {
+      return res.status(400).json({ error: "Missing gameId" });
+    }
+
+    if (!errorType) {
+      return res
+        .status(400)
+        .json({ error: "Missing errorType" });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ error: "Missing userId" });
+    }
+
+    // Validate if game exists
+    const { gameData, gameError } = await supabase
+      .from("games")
+      .select("id")
+      .eq("id", gameId)
+      .eq("user_id", userId)
+      .single();
+
+    if (gameError || !gameData) {
+      return res
+        .status(404)
+        .json({ error: "Game not found or unauthorized" });
+    }
+
+    // Validate error type
+    const { errorData, errorTypeError } = await supabase
+      .from("error_list")
+      .select("id")
+      .eq("name", errorType)
+      .single();
+
+    if (errorTypeError || !errorListData) {
+      return res
+        .status(400)
+        .json({ error: "Invalid error type" });
+    }
+
+    const errorId = await getErrorIdByName(errorType);
+    if (!errorId) {
+      return res
+        .status(400)
+        .json({ error: "Invalid error type" });
+    }
+
+    const { data, error } = await supabase
+      .from("errors")
+      .insert({
+        game_id: gameId,
+        error_id: errorType,
+        user_id: userId
+      });
+
+    console.log("data = ", data);
+    console.log("error = ", error);
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.status(201).json({
+      message: "Error logged",
+      data
+    });
   }
-
-  if (!errorType) {
-    return res.status(400).json({ error: "Missing errorType" });
-  }
-
-  if (!userId) {
-    return res.status(400).json({ error: "Missing userId" });
-  }
-
-  // Validate if game exists
-  const { gameData, gameError } = await supabase
-    .from("games")
-    .select("id")
-    .eq("id", gameId)
-    .eq("user_id", userId)
-    .single();
-
-  if (gameError || !gameData) {
-    return res
-      .status(404)
-      .json({ error: "Game not found or unauthorized" });
-  }
-
-  // Validate error type
-  const { errorData, errorTypeError } = await supabase
-    .from("error_list")
-    .select("id")
-    .eq("name", errorType)
-    .single();
-
-  if (errorTypeError || !errorListData) {
-    return res
-      .status(400)
-      .json({ error: "Invalid error type" });
-  }
-
-  const errorId = await getErrorIdByName(errorType);
-  if (!errorId) {
-    return res
-      .status(400)
-      .json({ error: "Invalid error type" });
-  }
-
-  const { data, error } = await supabase.from("errors").insert({
-    game_id: gameId,
-    error_id: errorType,
-    user_id: userId
-  });
-
-  console.log("data = ", data);
-  console.log("error = ", error);
-
-  if (error) {
-    return res.status(500).json({ error: error.message });
-  }
-
-  res.status(201).json({
-    message: "Error logged",
-    data
-  });
-});
+);
 
 export default router;

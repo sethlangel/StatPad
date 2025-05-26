@@ -7,31 +7,29 @@ const router = express.Router();
 // ====================
 // POST /watch/stats-today?user_id=123
 // ====================
-router.get("/stats-today", async (req, res) => {
-  console.log("req = ", req.query);
-  const { userId } = req.query;
+router.get(
+  "/stats-today",
+  authenticateUser,
+  async (req, res) => {
+    const today = new Date().toISOString().split("T")[0];
 
-  if (!userId) {
-    return res.status(400).json({ error: "Missing userId" });
+    const response = await supabase
+      .from("errors")
+      .select("*", { count: "exact", head: true }) // returns count only and not full rows
+      .eq("user_id", req.user.id)
+      .gte("created_at", `${today}T00:00:00Z`);
+
+    console.log(response);
+
+    if (response.error) {
+      return res
+        .status(500)
+        .json({ error: response.error.message });
+    }
+
+    res.json({ errors: response.count });
   }
-
-  const today = new Date().toISOString().split("T")[0];
-
-  const { data, error } = await supabase
-    .from("errors")
-    .select("*", { count: "exact", head: true }) // returns count only and not full rows
-    .eq("user_id", userId)
-    .gte("created_at", `${today}T00:00:00Z`);
-
-  console.log("data = ", data);
-  console.log("error = ", error);
-
-  if (error) {
-    return res.status(500).json({ error: error.message });
-  }
-
-  res.json({ errors: data });
-});
+);
 
 // ====================
 // POST /watch/new-game

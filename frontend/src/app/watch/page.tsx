@@ -9,12 +9,17 @@ const ERRORS = [
 ]
 
 // Fetch today's error count
-const fetchTodaysErrorCount = async (userId: string) => {
-    const res = await fetch(`/watch/stats-today?userId=${userId}`);
-    const data = await res.json();
+const fetchTodaysErrorCount = async (token: string) => {
+    // Get current error count
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/stats-today`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    const data = await response.json();
 
-    console.log("data in fetchTodaysErrorCount = ", data);
-    return (data.errors || []).length;
+    return data.errors || null;
 };
 
 const Watch = () => {
@@ -23,8 +28,6 @@ const Watch = () => {
     if (!auth) {
         return;
     }
-
-    //const [user, setUser] = useState<User | null>(null);
 
     const [gameId, setGameId] = useState<number | null>(null);
 
@@ -41,18 +44,14 @@ const Watch = () => {
     // 1. check for auth on mount
     // 2. fetch today's error count
     useEffect(() => {
-        if (!auth.isLoggedIn()) {
-            // TODO: handle not being signed in
+        if (auth.isLoggedIn()) {
+            console.log("Is logged in");
+            fetchTodaysErrorCount(auth.session?.access_token!).then((count) => { setErrorCount(count) });
         } else {
-            // if (data && data.user) {
-            //     setUser(data.user);
-            //     fetchTodaysErrorCount(data.user.id).then(setErrorCount);
-            // }
-            // else {
-            //     window.location.href = "/login";
-            // }
+            // TODO: handle not being signed in
+            console.log("Isn't logged in");
         }
-    }, []);
+    }, [auth]); // TODO: auth isn't initially instantiated? idk why. waiting for auth fixes this though
 
     // Called when user clicks "Start Game"
     const handleStartGame = async () => {

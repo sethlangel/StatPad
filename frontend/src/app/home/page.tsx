@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from 'react'
 
 type User = {
@@ -6,7 +7,7 @@ type User = {
   last_name: string;
 };
 
-function App() {
+export default function Home() {
   const [count, setCount] = useState(0)
 
   const [users, setUsers] = useState<User[]>([]);
@@ -50,5 +51,3 @@ function App() {
     </>
   )
 }
-
-export default App

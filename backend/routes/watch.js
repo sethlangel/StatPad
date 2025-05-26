@@ -5,7 +5,7 @@ import authenticateUser from "../middleware/auth.js";
 const router = express.Router();
 
 // ====================
-// POST /watch/stats-today?user_id=123
+// POST /watch/stats-today
 // ====================
 router.get(
   "/stats-today",
@@ -18,8 +18,6 @@ router.get(
       .select("*", { count: "exact", head: true }) // returns count only and not full rows
       .eq("user_id", req.user.id)
       .gte("created_at", `${today}T00:00:00Z`);
-
-    console.log(response);
 
     if (response.error) {
       return res

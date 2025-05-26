@@ -24,10 +24,7 @@ const fetchTodaysErrorCount = async (token: string) => {
 
 const Watch = () => {
     const auth = useAuth();
-
-    if (!auth) {
-        return;
-    }
+    if (!auth) return;
 
     const [gameId, setGameId] = useState<number | null>(null);
 
@@ -46,7 +43,7 @@ const Watch = () => {
     useEffect(() => {
         if (auth.isLoggedIn()) {
             console.log("Is logged in");
-            fetchTodaysErrorCount(auth.session?.access_token!).then((count) => { setErrorCount(count) });
+            fetchTodaysErrorCount(auth.session?.access_token!).then((count) => { if (count) setErrorCount(count); else setErrorCount(0); });
         } else {
             // TODO: handle not being signed in
             console.log("Isn't logged in");

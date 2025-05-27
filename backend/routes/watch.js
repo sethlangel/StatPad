@@ -29,19 +29,48 @@ router.get(
   }
 );
 
-// ====================
-// POST /watch/new-game
-// ====================
-router.post("/new-game", authenticateUser, async (req, res) => {
-  console.log(req.user);
+// Returns the ID of the user's current game (the most recently started game) if it hasn't finished.
+// If it has finished, -1 is returned. Can be used to check if the user is currently in a game or not.
+// Defined in a new function so it can be used in /watch/end-game as well
+async function getCurrentGameId(req) {
+  const response = await supabaseAdmin
+    .from("games")
+    .select("id, finished_at")
+    .eq("user_id", req.user.id)
+    .order("created_at", { ascending: false })
+    .limit(1);
 
+  if (response.error) {
+    return { error: response.error };
+  }
+
+  let gameId =
+    response.data[0].finished_at === null
+      ? response.data[0].id
+      : -1;
+
+  return { id: gameId };
+}
+
+router.get(
+  "/games/current",
+  authenticateUser,
+  async (req, res) => {
+    let response = await getCurrentGameId(req);
+
+    if (response.error) {
+      return res.status(500).json({ error: response.error });
+    }
+
+    return res.status(201).json(response);
+  }
+);
+
+router.post("/games", authenticateUser, async (req, res) => {
   const { data, error } = await supabaseAdmin
     .from("games")
     .insert({ user_id: req.user.id })
     .select();
-
-  console.log("data = ", data);
-  console.log("error = ", error);
 
   if (error) {
     return res.status(500).json({ error: error.message });
@@ -52,6 +81,25 @@ router.post("/new-game", authenticateUser, async (req, res) => {
     gameId: data[0].id
   });
 });
+
+// mark a game as completed
+router.patch(
+  "/games/:id",
+  authenticateUser,
+  async (req, res) => {
+    //const response = await getCurrentGameId(req);
+    const response = await supabaseAdmin
+      .from("games")
+      .update({ finished_at: new Date().toISOString() })
+      .eq("id", req.params.id);
+
+    if (response.error) {
+      return res.status(500).json({ error: response.error });
+    }
+
+    res.send(201);
+  }
+);
 
 // ====================
 // POST /watch/log-error

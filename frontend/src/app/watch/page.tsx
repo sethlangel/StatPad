@@ -19,42 +19,51 @@ const fetchTodaysErrorCount = async (token: string) => {
     });
     const data = await response.json();
 
-    return data.errors || null;
+    return data.errors || 0;
 };
+
+const getCurrentGame = async (token: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/games/current`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    const data = await response.json();
+
+    if (response.status === 201) {
+        return data;
+    } else {
+        // TODO: error checking
+        return -1;
+    }
+}
 
 const Watch = () => {
     const auth = useAuth();
-    if (!auth) return;
 
-    const [gameId, setGameId] = useState<number | null>(null);
-
-    // Track whether a game has started
-    const [gameStarted, setGameStarted] = useState(false);
-
-    // Store current game's error count
+    const [gameId, setGameId] = useState(-1);
     const [errorCount, setErrorCount] = useState(0);
-
-    // State to toggle the error type selector popup
     const [showErrorSelector, setShowErrorSelector] = useState(false);
 
-    // On first render:
-    // 1. check for auth on mount
-    // 2. fetch today's error count
     useEffect(() => {
         if (auth.isLoggedIn()) {
-            console.log("Is logged in");
-            fetchTodaysErrorCount(auth.session?.access_token!).then((count) => { if (count) setErrorCount(count); else setErrorCount(0); });
+            const token = auth.session?.access_token!;
+            // TODO: error handling
+            getCurrentGame(token).then((response) => { setGameId(response.id) });
+            // TODO: error handling
+            fetchTodaysErrorCount(token).then((count) => { setErrorCount(count) });
         } else {
             // TODO: handle not being signed in
             console.log("Isn't logged in");
         }
     }, [auth]); // TODO: auth isn't initially instantiated? idk why. waiting for auth fixes this though
 
-    // Called when user clicks "Start Game"
     const handleStartGame = async () => {
         if (!auth.isLoggedIn()) return;
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/new-game`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/games`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -63,10 +72,31 @@ const Watch = () => {
         });
 
         const data = await res.json();
-        console.log("data = ", data);
+
+        // TODO: error handling
+
         setGameId(data.gameId);
-        setGameStarted(true);
     };
+
+    const handleEndGame = async () => {
+        if (!auth.isLoggedIn() || gameId === -1) return;
+
+        console.log(gameId);
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/games/${gameId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${auth.session?.access_token}`,
+            }
+        });
+
+        if (res.status === 200) {
+            setGameId(-1);
+        } else {
+            // TOOD: error handling
+        }
+    }
 
     // Called when user clicks "Error" button
     const handleLogError = () => setShowErrorSelector(true);
@@ -96,20 +126,20 @@ const Watch = () => {
         return <div>Not logged in!</div>;
 
     return (
-        <div>
-            {!gameStarted ? (
-                <>
-                    <h1>Today's Errors</h1>
-                    <p>{errorCount}</p>
-                    <button onClick={handleStartGame}>Start Game</button>
-                </>
-            ) : (
-                <>
-                    <h1>Unforced Errors</h1>
-                    <p>{errorCount}</p>
-                    <button onClick={handleLogError}>Error</button>
-
-                    {showErrorSelector && (
+        gameId === -1 ?
+            <>
+                <h1>Today's Errors</h1>
+                <p>{errorCount}</p>
+                <button onClick={handleStartGame}>Start Game</button>
+            </>
+            :
+            <>
+                <h1>Unforced Errors</h1>
+                <p>{errorCount}</p>
+                <button onClick={handleLogError}>Error</button>
+                <button onClick={handleEndGame}>End Game</button>
+                {
+                    showErrorSelector && (
                         <div>
                             <h2>Select Error Type</h2>
                             <div>
@@ -126,11 +156,10 @@ const Watch = () => {
                                 )}
                             </div>
                         </div>
-                    )}
-                </>
-            )}
-        </div>
+                    )
+                }
+            </>
     );
-};
+}
 
 export default Watch;

@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
+import DatePicker from "../../components/datepicker";
 
 type Stats = {
     error_name: string,
@@ -42,19 +43,9 @@ export default function Stats() {
 
     return (
         <div className="flex flex-col content-center justify-center items-center gap-3 m-3">
-            <div>
-                <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="input"
-                />
-                <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="input mt-2"
-                />
+            <div className="sm:w-full flex justify-between">
+                <DatePicker date={startDate} onDateChange={(e: string) => setStartDate(e)} label="Start Date"/>
+                <DatePicker date={endDate} onDateChange={(e: string) => setEndDate(e)} label="End Date"/>
             </div>
             <div>
                 {

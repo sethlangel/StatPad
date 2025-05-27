@@ -5,7 +5,14 @@ const config: CapacitorConfig = {
   appName: 'StatPad',
   webDir: 'dist',
   server:{
-    url: "http://localhost:5173/"
+    url: "http://localhost:3000/"
+  },
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#15181D"
+    }
   }
 };
 

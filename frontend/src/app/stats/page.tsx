@@ -44,7 +44,7 @@ export default function Stats() {
     }, [startDate, endDate]);
 
     return (
-        <div className="flex flex-col content-center justify-center items-center gap-3 m-5">
+        <div className="flex flex-col gap-3 m-5">
             <div className="w-full flex justify-center gap-3 md:gap-10">
                 <DatePicker date={startDate} onDateChange={(e: string) => setStartDate(e)} label="Start Date" />
                 <DatePicker date={endDate} onDateChange={(e: string) => setEndDate(e)} label="End Date" />

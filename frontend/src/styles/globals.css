@@ -1,2 +1,12 @@
-@import "tailwindcss";
 @tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+@theme{
+    --color-dark-mode: #0A121E;
+    --color-pink-200: #F3E3F9;
+    --color-pink-400: #E1C6F2;
+    --color-pink-600: #D1A7F2;
+    --color-brand-gradient: linear-gradient(to right, #F3E3F9, #E1C6F2, #D1A7F2);
+}

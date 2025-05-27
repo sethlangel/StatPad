@@ -2,17 +2,19 @@
 
 import { AuthProvider } from "../hooks/useAuth"
 import '../styles/globals.css'
+import Navbar from "../components/navbar"
 
-export default function DashboardLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html className="bg-dark-mode" lang="en">
+      <body className="text-white">
         <main>
             <AuthProvider>
+              <Navbar/>
                 {children}
             </AuthProvider>
         </main>

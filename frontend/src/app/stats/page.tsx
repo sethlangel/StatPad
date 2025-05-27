@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from "react";
 import DatePicker from "../../components/datepicker";
+import StatsBarChart from "../../components/BarChart";
+import StatsTable from "./components/StatsTable";
 
 type Stats = {
     error_name: string,
@@ -42,19 +44,15 @@ export default function Stats() {
     }, [startDate, endDate]);
 
     return (
-        <div className="flex flex-col content-center justify-center items-center gap-3 m-3">
-            <div className="sm:w-full flex justify-between">
-                <DatePicker date={startDate} onDateChange={(e: string) => setStartDate(e)} label="Start Date"/>
-                <DatePicker date={endDate} onDateChange={(e: string) => setEndDate(e)} label="End Date"/>
+        <div className="flex flex-col content-center justify-center items-center gap-3 m-5">
+            <div className="w-full flex justify-center gap-3 md:gap-10">
+                <DatePicker date={startDate} onDateChange={(e: string) => setStartDate(e)} label="Start Date" />
+                <DatePicker date={endDate} onDateChange={(e: string) => setEndDate(e)} label="End Date" />
             </div>
-            <div>
-                {
-                    stats.map((stat, index) => (
-                        <p key={index}>{stat.error_rank} {stat.error_name} {stat.total_error_count}</p>
-                    ))
-                }
-            </div>
-        </div>
 
-    );
+            <StatsBarChart data={stats}/>
+
+            <StatsTable data={stats}/>
+        </div>
+    )
 }

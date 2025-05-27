@@ -9,7 +9,7 @@ export default function StatsTable(props: {data: Stats[]}) {
 
     return (
         <div className="overflow-x-auto rounded-lg shadow-lg">
-            <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700 rounded-lg">
+            <table className="w-full divide-y divide-gray-300 dark:divide-gray-700 rounded-lg">
                 <thead className="statpad-gradient text-base-100">
                     <tr>
                         <th

@@ -44,7 +44,7 @@ export default function Stats() {
                 setStats(sorted);
             })
             .catch(console.log);
-    }, [startDate, endDate]);
+    }, [startDate, endDate, auth]);
 
     return (
         <div className="flex flex-col gap-3 m-5">

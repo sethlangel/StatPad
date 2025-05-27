@@ -6,7 +6,7 @@ import home from "./routes/home.js";
 import users from "./routes/users.js";
 import auth from "./routes/auth.js";
 import watch from "./routes/watch.js";
-import stats from "./routes/stats.js";
+import stats from "./routes/stats.js"
 
 const app = express();
 const port = 8000;

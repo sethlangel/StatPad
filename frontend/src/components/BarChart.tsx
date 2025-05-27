@@ -40,9 +40,10 @@ export default function StatsBarChart({ data }: StatsBarChartProps) {
                     dataKey="error_name"
                     type="category"
                     interval={0}
-                    angle={0}
+                    angle={-25}
                     textAnchor="end"
-                    tick={{ fontSize: 14 }} />
+                    height={40}
+                    tick={{ fontSize: 12 }} />
                 <YAxis type="number" />
                 <Tooltip content={CustomTooltip} />
                 <defs>

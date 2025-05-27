@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "../../components/datepicker";
 import StatsBarChart from "../../components/BarChart";
 import StatsTable from "./components/StatsTable";
+import { useAuth } from "../../hooks/useAuth";
 
 type Stats = {
     error_name: string,
@@ -13,11 +14,13 @@ type Stats = {
 function formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate() + 1).padStart(2, "0");
+    const day = String(date.getDate() + 2).padStart(2, "0");
     return `${year}-${month}-${day}`;
 }
 
 export default function Stats() {
+    const auth = useAuth();
+
     const now = new Date();
     const todayString = formatDate(now);
 
@@ -34,7 +37,7 @@ export default function Stats() {
     }
 
     useEffect(() => {
-        fetchStats("0e16d185-e4f6-48b6-a83e-a981b0830613", startDate, endDate)
+        fetchStats(auth?.session?.user.id!, startDate, endDate)
             .then((res) => res.json())
             .then((json) => {
                 const sorted = json.sort((a: Stats, b: Stats) => a.error_rank - b.error_rank);

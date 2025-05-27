@@ -54,6 +54,7 @@ const Watch = () => {
             getCurrentGame(token).then((response) => { setGameId(response.id) });
             // TODO: error handling
             fetchTodaysErrorCount(token).then((count) => { setErrorCount(count) });
+            // TODO: fix bug when game is in progress and page is refreshed. shows errors for entire day, not current game.
         } else {
             // TODO: handle not being signed in
             console.log("Isn't logged in");
@@ -76,6 +77,7 @@ const Watch = () => {
         // TODO: error handling
 
         setGameId(data.gameId);
+        setErrorCount(0);
     };
 
     const handleEndGame = async () => {
@@ -93,6 +95,8 @@ const Watch = () => {
 
         if (res.status === 200) {
             setGameId(-1);
+            setErrorCount(0);
+            setShowErrorSelector(false);
         } else {
             // TOOD: error handling
         }
@@ -128,16 +132,14 @@ const Watch = () => {
     return (
         gameId === -1 ?
             <>
-                <h1>Today's Errors</h1>
-                <p>{errorCount}</p>
-                <button onClick={handleStartGame}>Start Game</button>
+                <button className="btn" onClick={handleStartGame}>Start Game</button>
             </>
             :
             <>
                 <h1>Unforced Errors</h1>
                 <p>{errorCount}</p>
-                <button onClick={handleLogError}>Error</button>
-                <button onClick={handleEndGame}>End Game</button>
+                <button className="btn" onClick={handleLogError}>Error</button>
+                <button className="btn" onClick={handleEndGame}>End Game</button>
                 {
                     showErrorSelector && (
                         <div>
@@ -147,6 +149,7 @@ const Watch = () => {
                                     (errorType) => (
                                         <button
                                             key={errorType}
+                                            className="btn"
                                             onClick={() =>
                                                 handleSelectErrorType(errorType)
                                             }>

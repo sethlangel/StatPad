@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "lint": "npx eslint . && npx prettier --check .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run dev -w frontend & npm run dev -w backend",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"

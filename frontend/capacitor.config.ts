@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'StatPad',
   webDir: 'dist',
   server:{
-    url: "http://localhost:3001/"
+    url: "http://localhost:3002/"
   },
   "plugins": {
     "StatusBar": {

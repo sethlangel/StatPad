@@ -9,18 +9,18 @@ const ERRORS = [
 ]
 
 // Fetch today's error count
-const fetchTodaysErrorCount = async (token: string) => {
-    // Get current error count
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/stats-today`, {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    });
-    const data = await response.json();
+// const fetchTodaysErrorCount = async (token: string) => {
+//     // Get current error count
+//     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/stats-today`, {
+//         headers: {
+//             "Content-Type": "application/json",
+//             "Authorization": `Bearer ${token}`
+//         }
+//     });
+//     const data = await response.json();
 
-    return data.errors || 0;
-};
+//     return data.errors || 0;
+// };
 
 const getCurrentGame = async (token: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/games/current`, {
@@ -48,18 +48,27 @@ const Watch = () => {
     const [showErrorSelector, setShowErrorSelector] = useState(false);
 
     useEffect(() => {
-        if (auth.isLoggedIn()) {
-            const token = auth.session?.access_token!;
-            // TODO: error handling
-            getCurrentGame(token).then((response) => { setGameId(response.id) });
-            // TODO: error handling
-            fetchTodaysErrorCount(token).then((count) => { setErrorCount(count) });
-            // TODO: fix bug when game is in progress and page is refreshed. shows errors for entire day, not current game.
-        } else {
-            // TODO: handle not being signed in
+        if (!auth.isLoggedIn()) {
             console.log("Isn't logged in");
+            return;
         }
-    }, [auth]); // TODO: auth isn't initially instantiated? idk why. waiting for auth fixes this though
+
+        const token = auth.session?.access_token;
+        if (!token) {
+            console.warn("Access token missing despite being logged in.");
+            return;
+        }
+
+        // TODO: error handling
+        getCurrentGame(token).then((response) => {
+            setGameId(response.id);
+        });
+
+        // TODO: error handling
+        // fetchTodaysErrorCount(token).then((count) => { setErrorCount(count) });
+
+        // TODO: fix bug when game is in progress and page is refreshed. shows errors for entire day, not current game.
+    }, [auth]);
 
     const handleStartGame = async () => {
         if (!auth.isLoggedIn()) return;

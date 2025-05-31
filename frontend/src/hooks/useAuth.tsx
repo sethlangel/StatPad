@@ -19,8 +19,7 @@ type Session = {
         email: string;
         email_confirmed_at: string;
         identities: {
-            // Define structure of each identity if known
-            [key: string]: any;
+            [key: string]: unknown; // not `any`
         }[];
         is_anonymous: boolean;
         last_sign_in_at: string;
@@ -30,7 +29,7 @@ type Session = {
             email: string;
             email_verified: boolean;
             phone_verified: boolean;
-            [key: string]: any;
+            [key: string]: unknown;
         };
     };
 };
@@ -42,26 +41,25 @@ interface AuthProviderProps {
 interface AuthContextProps {
     session?: Session;
     isLoggedIn: () => boolean;
-    login: (token: string) => void;
+    login: (session: Session) => void;
     logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | null>(null);
+export const AuthContext = createContext<AuthContextProps | null>(null);
 
 export function AuthProvider({ children }: AuthProviderProps) {
     const [session, setSession] = useState<Session | undefined>(undefined);
 
     useEffect(() => {
         const session = sessionStorage.getItem('session');
-        console.log(session)
-        if (session) setSession(JSON.parse(session));
+        if (session) setSession(JSON.parse(session) as Session);
     }, []);
 
     const isLoggedIn = () => {
         return session !== undefined;
-    }
+    };
 
-    const login = (session: any) => {
+    const login = (session: Session) => {
         sessionStorage.setItem('session', JSON.stringify(session));
         setSession(session);
     };

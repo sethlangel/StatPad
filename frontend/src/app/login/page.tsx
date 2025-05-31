@@ -113,6 +113,7 @@ export default function Login() {
                     </a>
                 </p>
             </div>
+            <div>{responseMessage && responseMessage}</div>
         </div>
     );
 }

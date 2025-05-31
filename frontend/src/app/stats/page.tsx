@@ -37,7 +37,10 @@ export default function Stats() {
     }
 
     useEffect(() => {
-        fetchStats(auth?.session?.user.id!, startDate, endDate)
+        const userId = auth?.session?.user?.id;
+        if (!userId) return;
+
+        fetchStats(userId, startDate, endDate)
             .then((res) => res.json())
             .then((json) => {
                 const sorted = json.sort((a: Stats, b: Stats) => a.error_rank - b.error_rank);
@@ -53,9 +56,9 @@ export default function Stats() {
                 <DatePicker date={endDate} onDateChange={(e: string) => setEndDate(e)} label="End Date" />
             </div>
 
-            <StatsBarChart data={stats}/>
+            <StatsBarChart data={stats} />
 
-            <StatsTable data={stats}/>
+            <StatsTable data={stats} />
         </div>
     )
 }

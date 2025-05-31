@@ -7,7 +7,7 @@
   "type": "module",
   "main": "eslint.config.js",
   "scripts": {
-    "lint": "npx eslint . && npx prettier --check .",
+    "lint": "npx eslint . && npx prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon backend.js",
     "start": "node backend.js"

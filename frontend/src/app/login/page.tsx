@@ -17,7 +17,7 @@ export default function Login() {
         const email = e.currentTarget.elements.namedItem("email") as HTMLInputElement;
         const password = e.currentTarget.elements.namedItem("password") as HTMLInputElement;
 
-        const response = await fetch("http://localhost:8000/auth/login", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

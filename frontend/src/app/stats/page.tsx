@@ -33,7 +33,7 @@ export default function Stats() {
     const [endDate, setEndDate] = useState(todayString);
 
     function fetchStats(uuid: string, start_date: string, end_date: string) {
-        return fetch(`http://localhost:8000/stats?uuid=${uuid}&start_date=${start_date}&end_date=${end_date}`);
+        return fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}}/stats?uuid=${uuid}&start_date=${start_date}&end_date=${end_date}`);
     }
 
     useEffect(() => {

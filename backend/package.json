@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx nodemon backend.js",
-    "start": "node /api/index.js",
+    "start": "node ./api/index.js",
     "build": ""
   },
   "dependencies": {

@@ -1,20 +1,20 @@
 'use client'
+
+import { useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth"
+import { useEffect } from "react";
 
 export default function Page() {
-    const auth = useAuth();
+  const router = useRouter();
+  const auth = useAuth();
 
-    return (
-        <>
-            <h1>Hello, Next.js!</h1>
-            <h1>Signed in? {auth?.isLoggedIn() ? "yes" : "no"}</h1>
-            {auth?.isLoggedIn() ? <>
-                <a>{JSON.stringify(auth.session!)}</a>
-                <br />
-                <button className="bg-amber-950 p-3 text-white rounded-2xl cursor-pointer" onClick={auth?.logout}>Sign out</button>
-            </> :
-                <a className="underline cursor-pointer" href="/login">Go to login</a>
-            }
-        </>
-    );
+  useEffect(() => {
+    if (auth.isLoggedIn()) {
+      router.push("/home");
+    } else {
+      router.push("/login");
+    }
+  }, [auth, router]);
+
+  return null; // You can return a loader or nothing
 }

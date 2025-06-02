@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import DatePicker from "../../components/datepicker";
+//import DatePicker from "../../components/datepicker";
 import { useAuth } from "../../hooks/useAuth";
 import SocialTable from "./components/SocialTable";
 
@@ -10,30 +10,28 @@ type Stats = {
     id: string
 }
 
-function formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-}
+// function formatDate(date: Date): string {
+//     const year = date.getFullYear();
+//     const month = String(date.getMonth() + 1).padStart(2, "0");
+//     const day = String(date.getDate()).padStart(2, "0");
+//     return `${year}-${month}-${day}`;
+// }
 
 export default function Social() {
     const auth = useAuth();
 
-    const now = new Date();
-    const todayString = formatDate(now);
+    // const now = new Date();
+    // const todayString = formatDate(now);
 
-    console.log(todayString)
-
-    const lastWeek = new Date();
-    lastWeek.setDate(now.getDate() - 7);
-    const lastWeekString = formatDate(lastWeek);
+    // const lastWeek = new Date();
+    // lastWeek.setDate(now.getDate() - 7);
+    // const lastWeekString = formatDate(lastWeek);
 
     const [stats, setStats] = useState<Stats[]>([]);
-    const [startDate, setStartDate] = useState(lastWeekString);
-    const [endDate, setEndDate] = useState(todayString);
+    //const [startDate, setStartDate] = useState(lastWeekString);
+    //const [endDate, setEndDate] = useState(todayString);
 
-    function fetchStats(uuid: string, start_date: string, end_date: string) {
+    function fetchStats() {
         return fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/social/ranking`);
     }
 
@@ -41,14 +39,14 @@ export default function Social() {
         const userId = auth?.session?.user?.id;
         if (!userId) return;
 
-        fetchStats(userId, startDate, endDate)
+        fetchStats()
             .then((res) => res.json())
             .then((json) => {
                 //const sorted = json.sort((a: Stats, b: Stats) => a.error_rank - b.error_rank);
                 setStats(json);
             })
             .catch(console.log);
-    }, [startDate, endDate, auth]);
+    }, [auth]);
 
     return (
         <div className="flex flex-col gap-3 m-5">

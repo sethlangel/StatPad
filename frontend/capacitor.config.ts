@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'StatPad',
   webDir: 'dist',
   server:{
-    url: "https://stat-pad-frontend.vercel.app/"
+    url: "http://localhost:3000" //http://localhost:3000 https://stat-pad-frontend.vercel.app/
   },
   "plugins": {
     "StatusBar": {

@@ -103,12 +103,10 @@ export default function Login() {
                 </button>
             </form>
 
-            {/* Sign Up Link */}
             <div className="mt-6 text-center">
                 <p className="text-sm">
                     Don't have an account?{' '}
-                    {/* TODO: LINK TO CREATE AN ACCOUNT */}
-                    <a href="/login" className="text-pink-600 font-medium transition-colors">
+                    <a href="/signup" className="text-pink-600 font-medium transition-colors">
                         Sign up here
                     </a>
                 </p>

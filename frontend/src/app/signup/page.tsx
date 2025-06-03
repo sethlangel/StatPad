@@ -1,8 +1,13 @@
 'use client'
 
+
+import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 
 export default function SignUp() {
+
+    const router = useRouter()
+
     const [responseMessage, setResponseMessage] = useState("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -25,7 +30,7 @@ export default function SignUp() {
         const json = await response.json();
 
         if (response.status === 201) {
-            setResponseMessage("Success! Go to /login to sign in.");
+            router.push("/login")
         } else if (response.status === 400) {
             setResponseMessage(json.error);
         } else {
@@ -34,21 +39,49 @@ export default function SignUp() {
     }
 
     return (
-        <div className="w-screen h-screen bg-gray-800 flex flex-row justify-center items-center" >
-            <div>
-                <form onSubmit={handleSubmit} >
-                    {/* <input id="fname" placeholder="First Name" className="bg-white" />
-                    <br />
-                    <input id="lname" placeholder="Last Name" className="bg-white" />
-                    <br /> */}
-                    <input id="email" placeholder="Email" className="bg-white" />
-                    <br />
-                    <input id="password" placeholder="Password" className="bg-white" />
-                    <br />
-                    <input type="submit" value="Submit" />
-                </form>
-                <a>{responseMessage}</a>
-            </div>
+        <div className="flex flex-col w-screen h-screen justify-center items-center gap-16">
+            <h1 className="text-transparent bg-clip-text text-7xl font-extrabold bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 p-2">StatPad</h1>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                    <div>
+                        <label htmlFor="email" className="block text-sm font-medium mb-1">
+                            Email address
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            placeholder="Enter your email"
+                            className="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="password" className="block text-sm font-medium mb-1">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            placeholder="Enter your password"
+                            className="w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-200"
+                        />
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 text-base-100 py-3 px-4 rounded-lg font-medium shadow-lg"
+                >
+                    Sign up
+                </button>
+            </form>
+            <div>{responseMessage && responseMessage}</div>
         </div>
     );
 }

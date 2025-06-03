@@ -1,8 +1,11 @@
+'use client'
 import { useAuth } from '../hooks/useAuth'
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
 
     const auth = useAuth()
+    const router = useRouter()
 
     return (
         auth.isLoggedIn() &&
@@ -28,6 +31,10 @@ export default function Navbar() {
                         <li><a href="/stats">Stats</a></li>
                         <li><a href="/social">Social</a></li>
                         <li><a href="/watch">Watch</a></li>
+                        <li><div onClick={() => {
+                            auth.logout()
+                            router.push("/login")
+                        }}>Logout</div></li>
                     </ul>
                 </div>
             </div>
@@ -35,6 +42,7 @@ export default function Navbar() {
                 <a href="/" className="btn btn-ghost text-transparent bg-clip-text text-2xl font-extrabold bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 p-2">StatPad</a>
             </div>
             <div className="navbar-end">
+                <div className='text-pink-400'>{auth.session?.user.email}</div>
                 {/* <button className="btn btn-ghost btn-circle">
             <div className="indicator">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /> </svg>

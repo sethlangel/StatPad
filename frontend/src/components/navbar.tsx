@@ -66,7 +66,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
                     <div className="navbar-center">
                         <a href="/" className="btn btn-ghost text-transparent bg-clip-text text-2xl font-extrabold bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 p-2">StatPad</a>
                     </div>
-                    <div className="navbar-end">
+                    <div className="navbar-end mr-3">
                         <div className='text-pink-400'>{auth.session?.user.email}</div>
                     </div>
 

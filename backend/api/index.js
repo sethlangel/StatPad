@@ -15,7 +15,8 @@ const port = 8000;
 app.use(cors());
 app.use(express.json());
 
-app.get("/", home);
+//app.get("/", home);
+app.use("/home", home);
 app.use("/users", users);
 app.use("/auth", auth);
 app.use("/watch", watch);

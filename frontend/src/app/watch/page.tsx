@@ -2,25 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import "../../styles/globals.css";
+import { CircleX } from "lucide-react";
 
 // Note: currently case sensitive. TODO: fix this
 const ERRORS = [
     "DINK", "DRIVE", "VOLLEY", "DROP", "SERVE", "SPEED UP"
 ]
-
-// Fetch today's error count
-// const fetchTodaysErrorCount = async (token: string) => {
-//     // Get current error count
-//     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/stats-today`, {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${token}`
-//         }
-//     });
-//     const data = await response.json();
-
-//     return data.errors || 0;
-// };
 
 const getCurrentGame = async (token: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/watch/games/current`, {
@@ -65,7 +53,6 @@ const Watch = () => {
         });
 
         // TODO: error handling
-        // fetchTodaysErrorCount(token).then((count) => { setErrorCount(count) });
 
         // TODO: fix bug when game is in progress and page is refreshed. shows errors for entire day, not current game.
     }, [auth]);
@@ -139,38 +126,55 @@ const Watch = () => {
         return <div>Not logged in!</div>;
 
     return (
-        gameId === -1 ?
-            <>
-                <button className="btn" onClick={handleStartGame}>Start Game</button>
-            </>
-            :
-            <>
-                <h1>Unforced Errors</h1>
-                <p>{errorCount}</p>
-                <button className="btn" onClick={handleLogError}>Error</button>
-                <button className="btn" onClick={handleEndGame}>End Game</button>
-                {
-                    showErrorSelector && (
-                        <div>
-                            <h2>Select Error Type</h2>
-                            <div>
-                                {ERRORS.map(
-                                    (errorType) => (
-                                        <button
-                                            key={errorType}
-                                            className="btn"
-                                            onClick={() =>
-                                                handleSelectErrorType(errorType)
-                                            }>
-                                            {errorType}
-                                        </button>
-                                    )
-                                )}
-                            </div>
-                        </div>
-                    )
-                }
-            </>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[--color-dark-mode] text-white px-4 py-8">
+        {gameId === -1 ? (
+          <button
+            className="btn px-6 py-3 font-bold text-lg text-[var(--color-dark-mode)] rounded-xl bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 transition-all shadow-lg"
+            onClick={handleStartGame}>
+            Start Game
+          </button>
+        ) : (
+          <div className="flex flex-col w-full max-w-md bg-transparent text-white rounded-2xl p-6 space-y-6">
+            <div
+              className="flex justify-end cursor-pointer"
+              onClick={() => handleEndGame()}>
+              <CircleX color="red" />
+            </div>
+            <div className="text-center cursor-pointer" onClick={() => setShowErrorSelector(false)}>
+              <p className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600">
+                {errorCount}
+              </p>
+            </div>
+
+            {!showErrorSelector && (
+              <div className="flex justify-between gap-4">
+                <button
+                  className="flex-1 btn font-bold text-2xl bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 text-[var(--color-dark-mode)] py-2 rounded-xl transition-all"
+                  onClick={handleLogError}>
+                  ERROR
+                </button>
+              </div>
+            )}
+
+            {showErrorSelector && (
+              <div className="mt-6">
+                <div className="grid grid-cols-2 gap-3">
+                  {ERRORS.map((errorType) => (
+                    <button
+                      key={errorType}
+                      className="btn text-[var(--color-dark-mode)] py-2 px-4 rounded-xl bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 transition-all font-semibold"
+                      onClick={() =>
+                        handleSelectErrorType(errorType)
+                      }>
+                      {errorType}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     );
 }
 

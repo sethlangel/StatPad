@@ -130,11 +130,25 @@ export default function Home() {
 
     return (
         <>
-            <div className="my-20 text-xl text-center">Welcome back, {auth.session?.user.email}!</div>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-10">
-                <InfoBox title="Weekly Overview" href="/stats" data={weekly} />
-                <InfoBox title="Social Overview" href="/social" data={social} />
-            </div >
+            <div className="w-full">
+                <div className="max-w-4xl mx-auto px-4">
+                    <div className="my-10 md:mt-20">
+                        <div className="text-xl text-center text-pink-200">
+                            Welcome back
+                        </div>
+
+                        <div className="text-xl text-center text-pink-200">
+                            {auth.session?.user.email}!
+                        </div>
+                    </div>
+
+
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-10">
+                        <InfoBox title="Weekly Overview" href="/stats" data={weekly} />
+                        <InfoBox title="Social Overview" href="/social" data={social} />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

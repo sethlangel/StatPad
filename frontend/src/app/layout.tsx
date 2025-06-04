@@ -1,6 +1,6 @@
 'use client'
 import '../styles/globals.css'
-import Navbar from '../components/navbar'
+import Navbar from '../components/navbar/navbar'
 import { AuthProvider } from '../hooks/useAuth'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

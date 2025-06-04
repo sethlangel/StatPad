@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { Trophy, CircleAlert, Clock, ChartColumn } from "lucide-react";
-import InfoBox from "./components/InfoBox";
+import InfoBox, { Data } from "./components/InfoBox";
 
 export default function Home() {
     const auth = useAuth();
@@ -46,7 +46,7 @@ export default function Home() {
         fetchWeeklyStats()
             .then((res) => res.json())
             .then((json) => {
-                let minutes = json.total_time / 1000 / 60;
+                const minutes = json.total_time / 1000 / 60;
 
                 // Convert time to minutes
                 if (minutes <= 60) {
@@ -65,7 +65,7 @@ export default function Home() {
         fetchSocialStats()
             .then((res) => res.json())
             .then((json) => {
-                let minutes = json.total_time / 1000 / 60;
+                const minutes = json.total_time / 1000 / 60;
 
                 // Convert time to minutes
                 if (minutes <= 60) {
@@ -82,7 +82,7 @@ export default function Home() {
             .catch((error) => console.log("fetchSocialStats() error:", error));
     }, [auth]);
 
-    const weekly = [
+    const weekly: Data[] = [
         {
             icon: Trophy,
             mainText: weeklyStats.game_count,
@@ -105,7 +105,7 @@ export default function Home() {
         },
     ]
 
-    const social = [
+    const social: Data[] = [
         {
             icon: Trophy,
             mainText: socialStats.total_matches_played,

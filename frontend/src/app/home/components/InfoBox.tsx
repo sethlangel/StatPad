@@ -1,7 +1,16 @@
+import { LucideProps } from "lucide-react"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
+
+export type Data = {
+    icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>,
+    mainText: string | number,
+    bottomText: string
+}
+
 type InfoData = {
     title: string,
     href: string,
-    data: any[]
+    data: Data[]
 }
 
 export default function InfoBox(props: InfoData) {

@@ -148,39 +148,33 @@ const Watch = () => {
             Start Game
           </button>
         ) : (
-          <div className="w-full max-w-md bg-white text-black rounded-2xl shadow-xl p-6 space-y-6">
+          <div className="w-full max-w-md bg-transparent text-white rounded-2xl p-6 space-y-6">
+            <button
+              className="flex-1 btn bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition-all"
+              onClick={handleEndGame}>
+              X
+            </button>
             <div className="text-center">
-              <h1 className="text-2xl font-bold mb-2">
-                Unforced Errors
-              </h1>
-              <p className="text-4xl font-extrabold text-[--color-brand-gradient]">
+              <p className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600">
                 {errorCount}
               </p>
             </div>
 
             <div className="flex justify-between gap-4">
               <button
-                className="flex-1 btn bg-[--color-pink-600] hover:bg-[--color-pink-400] text-white py-2 rounded-xl transition-all"
+                className="flex-1 btn font-bold text-2xl bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 text-[var(--color-dark-mode)] py-2 rounded-xl transition-all"
                 onClick={handleLogError}>
-                Error
-              </button>
-              <button
-                className="flex-1 btn bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition-all"
-                onClick={handleEndGame}>
-                End Game
+                ERROR
               </button>
             </div>
 
             {showErrorSelector && (
               <div className="mt-6">
-                <h2 className="text-xl font-semibold mb-4">
-                  Select Error Type
-                </h2>
                 <div className="grid grid-cols-2 gap-3">
                   {ERRORS.map((errorType) => (
                     <button
                       key={errorType}
-                      className="btn py-2 px-4 rounded-xl bg-[--color-pink-200] hover:bg-[--color-pink-400] transition-all font-semibold"
+                      className="btn text-[var(--color-dark-mode)] py-2 px-4 rounded-xl bg-gradient-to-r from-pink-200 via-pink-400 to-pink-600 transition-all font-semibold"
                       onClick={() =>
                         handleSelectErrorType(errorType)
                       }>

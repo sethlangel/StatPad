@@ -19,25 +19,11 @@ development concepts, showcasing:
 - TypeScript integration
 - Mobile-responsive design principles
 
-## Technical Architecture
+## UI Prototype
+You can view our original Figma prototype here:
+**[Figma - StatPad UI Mockups](https://www.figma.com/design/dDGRHxXpgRB99eTZ1yVQEg/StatPad?node-id=1-91&t=YiMiQ6r5tbjSRmqc-1)**
 
-### Frontend Implementation
-
-- Next.js framework for server-side rendering and routing
-- TypeScript for type safety and better development experience
-- Tailwind CSS for responsive and maintainable styling
-- Capacitor integration for cross-platform mobile support
-
-### Backend Implementation
-- Express.js for RESTful API development
-- Supabase for authentication and database services
-- Node.js runtime environment
-- Middleware implementation for request processing
-
-### Sequence Diagrams
-![Editor _ Mermaid Chart-2025-05-23-014418](https://github.com/user-attachments/assets/047358ed-633e-406e-bca7-914e6be6f3f1)
-![Editor _ Mermaid Chart-2025-05-23-014536](https://github.com/user-attachments/assets/a4047cde-a4d1-429a-abd7-f2703f94607d)
-![Editor _ Mermaid Chart-2025-05-23-014549](https://github.com/user-attachments/assets/85b36003-e444-4244-b7c4-9f8b4af58b1b)
+_Last updated: June 3, 2025_
 
 ## Development Requirements
 
@@ -78,10 +64,11 @@ npm start
 
 ```
 StatPad/
-├── frontend/           # Next.js frontend implementation
+├── frontend/          # Next.js frontend implementation
 ├── backend/           # Express.js backend implementation
+├── docs/              # Architecture and UML documentation
 ├── package.json       # Project configuration and dependencies
-└── README.md         # Project documentation
+└── README.md          # Project documentation
 ```
 
 ## Development Workflow
@@ -102,6 +89,11 @@ Supabase, featuring:
 - Session management
 - User profile handling
 
+## Technical Architecture
+
+For detailed information about the technical architecture of this project, please refer to [/docs/architecture.md](https://github.com/sethlangel/StatPad/tree/main/docs/architecture.md)
+
+
 ## Academic Context
 
 This project was developed for CSC 307 (Software Engineering)
@@ -118,5 +110,4 @@ demonstrating practical application of:
 
 ## Documentation
 
-For detailed information about contributing to this project,
-please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+For detailed information about contributing to this project, please refer to [CONTRIBUTING.md](CONTRIBUTING.md).
